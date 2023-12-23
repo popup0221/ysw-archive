@@ -10,11 +10,10 @@ summary: React의 컴포넌트 랜더링 과정 및 랜더링 최적화
 
 ### 읽기 전 사전지식
 
-1. 원시타입(Primitive Types), 참조타입(Reference Types)
-   ​
+**1. 원시타입(Primitive Types), 참조타입(Reference Types)**
+​
 
 - 원시타입(Primitive Types)
-  ​
 
 ```javascript
 let num = 42 // 숫자 Number
@@ -25,34 +24,21 @@ let dummy = null // null: 값이 존재하지 않음
 let dummy2 // undifined: 값이 할당 되지않음
 ```
 
-- 참조타입(Reference Types) 
-  ​
-  객체(Object):
-  ​
-  여러 속성과 메서드를 포함할 수 있는 데이터 타입입니다.
-  예: let obj = { key: "value" };
-  배열(Array):
-  ​
-  여러 값을 순서대로 저장하는 데이터 타입입니다.
-  예: let arr = [1, 2, 3];
-  함수(Function):
-  ​
-  코드 블록을 나타내며, 재사용 가능한 코드 조각입니다.
-  예: function add(a, b) { return a + b; }
-  Date:
-  ​
-  날짜와 시간 정보를 다루는 객체입니다.
-  예: let currentDate = new Date();
-  RegExp (정규 표현식):
-  ​
-  문자열에서 패턴을 검색하거나 변경하는 데 사용되는 객체입니다.
-  예: let regex = /pattern/;
-  ​
+- 참조타입(Reference Types)
 
-2. 얕은 비교(Shallow Comparison), 깊은 비교 (Deep Comparison)
-   ​
-   얕은 비교(Shallow Comparison)
-   ​
+```javascript
+let obj = { key: 'value' } // 객체(Object)
+let arr = [1, 2, 3] // 배열(Array)
+function add(a, b) {
+  return a + b
+} // 함수(Function)
+let currentDate = new Date() // 날짜(Date)
+let regex = /pattern/ // 정규표현식(RegExp)
+```
+
+**2. 얕은 비교(Shallow Comparison), 깊은 비교 (Deep Comparison)**
+​
+얕은 비교(Shallow Comparison)
 
 - 얕은 비교는 객체나 배열이 참조(reference)하는 메모리 주소를 비교
 - 두 객체나 배열이 동일한 참조를 가지고 있을 때만 동일하다고 판단
@@ -83,8 +69,9 @@ const obj2 = { a: 1, b: { c: 2 } };
 console.log(_.isEqual(obj1, obj2)); // true (깊은 비교, lodash 라이브러리 사용)
 ```
 
-​ 3. 리액트의 props는 얕은 비교를 한다.
-​ 4. 리액트의 랜더링(React Rendering)
+​ **3. 리액트의 props는 얕은 비교를 한다**
+
+​ **4. 리액트의 랜더링(React Rendering)**
 
 - Reconciliation Phase (조정 단계 / Render Phase):
 
@@ -97,12 +84,12 @@ console.log(_.isEqual(obj1, obj2)); // true (깊은 비교, lodash 라이브러�
     변경된 부분만을 Real DOM에 반영하기 전에, React는 변경된 부분을 먼저 메모리 상의 real DOM에 반영.
     이 때 브라우저에 실제 변경이 일어나지 않으며 메모리 상에서만 조정이 이루어짐
 
-- Commit Phase (확정 단계): \* Side-Effect 처리:
-  React는 commit phase에서 변경된 부분을 Real DOM에 반영
-  이 단계에서 실제 DOM 조작이 일어나기에 Commit이라고 함
+- Commit Phase (확정 단계):
 
-      * Life Cycle Method 실행:
-        'componentDidMount', 'componentDidUpdate', 'componentWillUnMount' 등의 라이프사이클 메소드가 실행
-
-  ​ \* Layout & Paint:
-  브라우저는 변경된 부분을 기반으로 레이아웃을 제계산하고, 화면을 다시 그림
+  - Side-Effect 처리:
+    React는 commit phase에서 변경된 부분을 Real DOM에 반영
+    이 단계에서 실제 DOM 조작이 일어나기에 Commit이라고 함
+  - Life Cycle Method 실행:
+    'componentDidMount', 'componentDidUpdate', 'componentWillUnMount' 등의 라이프사이클 메소드가 실행
+  - Layout & Paint:
+    브라우저는 변경된 부분을 기반으로 레이아웃을 제계산하고, 화면을 다시 그림
