@@ -1,0 +1,90 @@
+---
+title: pre-rendering 그리고 hydration
+date: '2024-02-05'
+tags: ['Next.js']
+draft: false
+summary: Next.js의 랜더링 과정
+---
+
+## Pre-rendering과 Hydration
+
+### 1. Pre-rendering (사전 렌더링)
+
+#### 정적 생성 (Static Generation):
+
+Next.js에서 정적 생성은 빌드 타임에 페이지를 렌더링하여 정적인 HTML 파일로 생성하는 것을 말한다.
+이렇게 생성된 HTML 파일은 클라이언트로 제공되어 사용자의 요청에 대해 서버에서 동적으로 생성하는 것이 아니라 이미 만들어진 정적 파일을 반환한다.
+
+```jsx
+
+// pages/index.js
+function HomePage({ data }) {
+  return (
+    <div>
+      <h1>{data.title}</h1>
+      <p>{data.content}</p>
+    </div>
+  );
+}
+
+export async function getStaticProps() {
+  const data = // fetch data from an API or database
+  return {
+    props: { data },
+  };
+}
+
+```
+
+## 서버 사이드 렌더링 (Server-Side Rendering):
+
+서버 사이드 렌더링은 각 요청마다 서버에서 페이지를 동적으로 렌더링하여 HTML을 생성한다.
+이때, 요청 시에 필요한 데이터를 서버에서 가져와 렌더링한다.
+
+```jsx
+
+// pages/[id].js
+function Post({ data }) {
+  return (
+    <div>
+      <h1>{data.title}</h1>
+      <p>{data.content}</p>
+    </div>
+  );
+}
+
+export async function getServerSideProps(context) {
+  const { params } = context;
+  const data = // fetch data from an API or database using params.id
+  return {
+    props: { data },
+  };
+}
+
+```
+
+## Pre-rendering과 Hydration (계속)
+
+### 2. Hydration (하이드레이션)
+
+Hydration은 클라이언트 측에서 정적으로 렌더링된 페이지를 동적으로 만들어 주는 과정을 말한다.
+클라이언트에서 페이지를 로드할 때, 해당 페이지의 정적 HTML이 먼저 화면에 표시되고,
+그 후 JavaScript 코드가 실행되어 이를 동적으로 만들고 상호 작용을 추가하는 과정을 의미한다.
+
+이는 Next.js의 자바스크립트 번들 및 클라이언트 측 라우팅과 관련이 있다.
+브라우저에서는 초기 페이지 로드 시에 정적 HTML을 보여주고, 그 후 JavaScript 코드가 실행되어 페이지를 `hydrate`하여 상호 작용을 가능하게 한다.
+
+```jsx
+// 예시: 클라이언트 측에서 하이드레이션을 수행하는 코드
+import { useEffect } from 'react'
+
+function ClientRenderedComponent() {
+  useEffect(() => {
+    // 클라이언트 측에서 초기화 및 상호 작용을 수행하는 코드
+  }, [])
+
+  return <div>{/* 컴포넌트의 내용 */}</div>
+}
+```
+
+`이러한 방식으로 Pre-rendering과 Hydration을 함께 사용하면 트래픽이 많은 상황에서 초기 로딩 성능을 최적화하면서도 동적인 상호 작용을 제공할 수 있습니다.`
