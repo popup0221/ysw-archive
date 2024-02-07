@@ -1,7 +1,7 @@
 ---
 title: useReducer
 date: '2024-02-06'
-tags: ['react']
+tags: ['react', 'hooks']
 draft: false
 summary: react useReducer 사용법
 ---
@@ -17,13 +17,14 @@ React의 `useReducer` 훅은 상태 관리를 위해 사용되는 훅.
 ```jsx
 import React, { useReducer } from 'react'
 
-// 초기 상태를 정의합니다.
+// 초기 상태를 정의
 const initialState = {
   count: 0,
 }
 
 // reducer 함수를 정의
-const reducer = (state, action) => { // action은 dispatch 함수를 통해 전달
+const reducer = (state, action) => {
+  // action은 dispatch 함수를 통해 전달
   switch (action.type) {
     case 'increment':
       return { count: state.count + 1 }
