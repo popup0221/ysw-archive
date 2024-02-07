@@ -1,0 +1,56 @@
+---
+title: javascript의 메모리 관리
+date: '2024-02-07'
+tags: ['JavaScript']
+draft: false
+summary: javascript의 메모리 관리
+---
+
+## javascript의 메모리 관리
+
+자바 스크립트는 객체가 생성되었을 때 자동으로 메모리르 할당하고  
+더 이상 필요하지 않을 떄 자동적으로 해제한다. (가비지 컬렉션)
+
+### 메모리 생명주기
+
+1. 메모리 할당
+2. 메모리 사용(읽기, 쓰기)
+3. 메모리 헤체
+
+#### 메모리 할당
+
+```JavaScript
+const n = 123; // 정수를 담기 위한 메모리 할당
+const s = "azerty"; // 문자열을 담기 위한 메모리 할당
+
+const o = {
+  a: 1,
+  b: null,
+}; // 오브젝트와 그 오브젝트에 포함된 값들을 담기 위한 메모리 할당
+
+// (오브젝트처럼) 배열과 배열에 담긴 값들을 위한 메모리 할당
+const a = [1, null, "abra"];
+
+function f(a) {
+  return a + 2;
+} // 함수를 위한 할당(함수는 호출 가능한 오브젝트)
+
+// 함수식 또한 오브젝트를 담기 위한 메모리를 할당합니다.
+someElement.addEventListener(
+  "click",
+  () => {
+    someElement.style.backgroundColor = "blue";
+  },
+  false,
+);
+
+```
+
+#### 함수 호출을 통한 할당
+
+```JavaScript
+const d = new Date(); // Date 개체를 위해 메모리를 할당
+
+const e = document.createElement("div"); // DOM 엘리먼트를 위해 메모리를 할당
+
+```
