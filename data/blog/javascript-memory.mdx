@@ -17,7 +17,7 @@ summary: javascript의 메모리 관리 - 선언(할당), 사용, 해제
 2. 메모리 사용(읽기, 쓰기)
 3. 메모리 헤체
 
-#### 메모리 할당
+#### 1. 메모리 할당
 
 ```JavaScript
 const n = 123; // 정수를 담기 위한 메모리 할당
@@ -55,3 +55,31 @@ const e = document.createElement("div"); // DOM 엘리먼트를 위해 메모리
 
 ```
 
+메소드가 새로운 값이나 오브젝트를 할당하기도 한다.
+
+```JavaScript
+const s = "azerty";
+const s2 = s.substr(0, 3); // s2는 새로운 문자열
+// JavaScript에서 문자열은 immutable 값이기 때문에,
+// 메모리를 새로 할당하지 않고 단순히 [0, 3] 이라는 범위만 저장합니다.
+
+const a = ["ouais ouais", "nan nan"];
+const a2 = ["generation", "nan nan"];
+const a3 = a.concat(a2);
+// a 와 a2 를 이어붙여, 4개의 원소를 가진 새로운 배열
+
+```
+
+#### 2. 메모리 사용(값 사용)
+
+할당된 메모리를 읽고 쓰는 것을 의미한다.  
+**변수**나 **객체 속성의 값**을 읽고 쓰거나  
+함수 호출 시 함수 인수(parameter)에 전달하여 수행한다.
+
+#### 3. 메모리 헤제
+
+Javascript는 **가비지 컬렉션(GC)**를 사용하여 자동 메모리 관리를 한다.
+
+### 가비지 콜렉션
+
+https://developer.mozilla.org/ko/docs/Web/JavaScript/Memory_management 참조
