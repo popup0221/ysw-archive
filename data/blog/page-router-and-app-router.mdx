@@ -5,3 +5,66 @@ tags: ['Next.js']
 draft: false
 summary: Next.js의 Page Router와 App Router에 대해 알아보기
 ---
+
+<TOCInline toc={props.toc} toHeading={4} />
+
+## Next.js의 라우팅
+
+Next.js에서는 페이지 라우팅을 위해 두 가지 주요 개념을 사용한다 `페이지 라우터와 애플리케이션 라우터`
+`페이지 라우터`는 단일 페이지 애플리케이션(SPA) 스타일의 라우팅을 처리하고,  
+`애플리케이션 라우터` 다양한 페이지 간의 네비게이션을 관리한다.
+
+### Next.js Page Router
+
+페이지 라우터는 단일 페이지 애플리케이션(SPA) 스타일의 라우팅을 처리한다
+사용자가 애플리케이션 내에서 다른 페이지로 이동할 때 페이지를  
+`다시 로드`(re-rendering)하지 않고 내비게이션을 처리할 수 있다.
+
+```jsx
+// pages/index.js
+
+import Link from 'next/link'
+
+const HomePage = () => {
+  return (
+    <div>
+      <h1>Welcome to Next.js!</h1>
+      <Link href="/about">
+        <a>About</a>
+      </Link>
+    </div>
+  )
+}
+
+export default HomePage
+```
+
+### Next.js App Router
+
+애플리케이션 라우터는 여러 페이지 간의 네비게이션을 관리한다.  
+예를 들어 사용자가 버튼을 클릭하여 다른 페이지로 이동하거나  
+`특정 작업을 수행했을 때` 페이지를 전환하는 것을 처리합니다.
+
+```jsx
+// pages/about.js
+
+import { useRouter } from 'next/router'
+
+const AboutPage = () => {
+  const router = useRouter() // useRouter훅을 사용하여 현재 페이지의 라우터 인스턴스를 사용
+
+  const handleClick = () => {
+    router.push('/')
+  }
+
+  return (
+    <div>
+      <h1>About Us</h1>
+      <p>This is the about page.</p>
+      <button onClick={handleClick}>Go back home</button>
+    </div>
+  )
+}
+
+export default AboutPage
+```
