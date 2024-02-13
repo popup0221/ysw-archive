@@ -1,0 +1,110 @@
+---
+title: react form 데이터 유효성 검사
+date: '2024-02-14'
+tags: ['oauth2']
+draft: false
+summary: react-hook-form과 zod를 사용하여 form 유효성 검사하기
+---
+
+<TOCInline toc={props.toc} toHeading={4} />
+
+React Hook Form과 Zod를 사용하여 유효성 검사하기
+
+React Hook Form - React에서 폼을 관리하기 위한 라이브러리
+Zod -JavaScript 및 TypeScript에서 사용할 수 있는 데이터 유효성 검사 라이브러리
+
+React Hook Form과 Zod를 설치
+npm install react-hook-form zod
+
+React Hook Form (https://react-hook-form.com/)
+
+간단한 react hook Form 기능 소개 (사용한 변수는 아래 코드 참조)
+
+1. watch() - 특정 필드의 값 변경을 감지
+
+interface FormData {
+email: string;
+}
+
+const { watch } = useForm<FormData>();
+
+console.log(watch("email")) // email input이 변경될 때마다 console을 찍음
+
+2. setError() - 특정 경우에 수동으로 에러를 설정
+
+interface FormData {
+email: name;
+}
+
+const { setError } = useForm<FormData>();
+
+useEffect(() => {
+setError("name", {
+type: "number",
+message: "이름에 숫자가 들어갈 수 없습니다."
+})
+})
+
+React-Hook-Form과 zod를 사용한 validation 예제 (아래 주석을 참고 하면서 코드를 봐주세요)
+import { useForm, SubmitHandler } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+
+// zod(https://zod.dev/) - type별 유효성 검사 메소드가 여러가지 있습니다.
+
+// zod object 생성
+const schema = z.object({
+// refine을 사용하여도 표시 할 수도 있음
+// z.string().refine(data => data.length >= 3, {message : '이름은 최소 3글자~'})
+name: z.string().min(3, '이름은 최소 3글자 이상이어야 합니다.'),
+email: z.string().email('올바른 이메일 주소를 입력하세요.'),
+});
+
+// 폼 데이터 인터페이스
+interface FormData {
+name: string;
+email: string;
+}
+
+// ValidationSampleCode component
+const ValidationSampleCode = () => {
+
+const {
+register,
+handleSubmit,
+formState: { errors } // errors 객체를 사용하여 각 템플릿 필드의 오류메시지 표시 가능
+} = useForm<FormData>({
+// 위에 만든 zod object(schema)를 사용해 zodResolver() 메서드로 form 유효성 검사
+resolver: zodResolver(schema),
+});
+
+// onSubmit 메서드를 사용하여 유효성검사 통과 시 데이터 처리를 콜백으로 선언가능
+const onSubmit: SubmitHandler<FormData> = (data) => {
+console.log(data);
+};
+
+return (
+
+<form onSubmit={handleSubmit(onSubmit)}>
+<div>
+<label>이름</label>
+<input {...register('name')} />
+{errors.name && <p>{errors.name.message}</p>}
+</div>
+
+      <div>
+        <label>이메일</label>
+        <input {...register('email')} />
+        {errors.email && <p>{errors.email.message}</p>}
+      </div>
+
+      <button type="submit">제출</button>
+    </form>
+
+);
+};
+
+export default ValidationSampleCode
+
+이건 내용 이외에 React Test Code 작성에 대해 잘 정리된 블로그가 있어서 공유합니다.
+https://maeng2418.github.io/react/react_testing_library/
