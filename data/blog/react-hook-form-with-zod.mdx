@@ -21,27 +21,27 @@ npm install react-hook-form zod
 
 **1. watch() - 특정 필드의 값 변경을 감지**
 
-```jsx
+```tsx
 interface FormData {
-  email: string;
+  email: string
 }
 
-const { watch } = useForm<FormData>();
-console.log(watch("email")) // email input이 변경될 때마다 console을 찍음
+const { watch } = useForm<FormData>()
+console.log(watch('email')) // email input이 변경될 때마다 console을 찍음
 ```
 
 **2. setError() - 특정 경우에 수동으로 에러를 설정**
 
-```jsx
+```tsx
 interface FormData {
-  email: name;
+  email: name
 }
 
-const { setError } = useForm<FormData>();
+const { setError } = useForm<FormData>()
 useEffect(() => {
-  setError("name", {
-    type: "number",
-    message: "이름에 숫자가 들어갈 수 없습니다."
+  setError('name', {
+    type: 'number',
+    message: '이름에 숫자가 들어갈 수 없습니다.',
   })
 })
 ```
@@ -105,10 +105,10 @@ const invalidUserData: UserData = {
 
 (아래 주석을 참고 하면서 코드를 봐주세요)
 
-```jsx
-import { useForm, SubmitHandler } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
+```tsx
+import { useForm, SubmitHandler } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
 
 // zod object 생성
 const schema = z.object({
@@ -116,31 +116,30 @@ const schema = z.object({
   // z.string().refine(data => data.length >= 3, {message : '이름은 최소 3글자~'})
   name: z.string().min(3, '이름은 최소 3글자 이상이어야 합니다.'),
   email: z.string().email('올바른 이메일 주소를 입력하세요.'),
-});
+})
 
 // 폼 데이터 인터페이스
 interface FormData {
-  name: string;
-  email: string;
+  name: string
+  email: string
 }
 
 // ValidationSampleCode component
 const ValidationSampleCode = () => {
-
   const {
     register,
     handleSubmit,
-    formState: { errors } // errors 객체를 사용하여 각 템플릿 필드의 오류메시지 표시 가능
+    formState: { errors }, // errors 객체를 사용하여 각 템플릿 필드의 오류메시지 표시 가능
   } = useForm<FormData>({
     // 위에 만든 zod object(schema)를 사용해 zodResolver() 메서드로 form 유효성 검사
     resolver: zodResolver(schema),
-  });
+  })
 
   // SubmitHandler를 사용하여 유효성검사 통과 시 데이터 처리를 콜백으로 선언가능
-  const onSubmit = SubmitHandler<FormData> = (data) => {
+  const onSubmit = (SubmitHandler<FormData> = (data) => {
     // 통과 시 데이터 처리
-    console.log(data);
-  };
+    console.log(data)
+  })
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -157,8 +156,8 @@ const ValidationSampleCode = () => {
 
       <button type="submit">제출</button>
     </form>
-  );
-};
+  )
+}
 
-export default ValidationSampleCode;
+export default ValidationSampleCode
 ```
