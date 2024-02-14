@@ -8,90 +8,147 @@ summary: react-hook-form과 zod를 사용하여 form 유효성 검사하기
 
 <TOCInline toc={props.toc} toHeading={4} />
 
-React Hook Form과 Zod를 사용하여 유효성 검사하기
+`React-Hook-Form` : React에서 폼을 관리하기 위한 라이브러리 **(https://react-hook-form.com/)**  
+`Zod` : JavaScript 및 TypeScript에서 사용할 수 있는 데이터 유효성 검사 라이브러리 **(https://zod.dev/)**
 
-React Hook Form - React에서 폼을 관리하기 위한 라이브러리
-Zod -JavaScript 및 TypeScript에서 사용할 수 있는 데이터 유효성 검사 라이브러리
+## React Hook Form과 Zod를 설치
 
-React Hook Form과 Zod를 설치
+```node
 npm install react-hook-form zod
+```
 
-React Hook Form (https://react-hook-form.com/)
+### 간단한 React-Hook-Form 기능 소개
 
-간단한 react hook Form 기능 소개 (사용한 변수는 아래 코드 참조)
+**1. watch() - 특정 필드의 값 변경을 감지**
 
-1. watch() - 특정 필드의 값 변경을 감지
-
+```jsx
 interface FormData {
-email: string;
+  email: string;
 }
 
 const { watch } = useForm<FormData>();
-
 console.log(watch("email")) // email input이 변경될 때마다 console을 찍음
+```
 
-2. setError() - 특정 경우에 수동으로 에러를 설정
+**2. setError() - 특정 경우에 수동으로 에러를 설정**
 
+```jsx
 interface FormData {
-email: name;
+  email: name;
 }
 
 const { setError } = useForm<FormData>();
-
 useEffect(() => {
-setError("name", {
-type: "number",
-message: "이름에 숫자가 들어갈 수 없습니다."
+  setError("name", {
+    type: "number",
+    message: "이름에 숫자가 들어갈 수 없습니다."
+  })
 })
-})
+```
 
-React-Hook-Form과 zod를 사용한 validation 예제 (아래 주석을 참고 하면서 코드를 봐주세요)
+### 간단한 Zod 사용예제
+
+**1. zod 인스턴스의 ㄴobject() 메소드로 스키마 정의하기**
+
+```jsx
+import { z } from 'zod'
+
+// 스키마 정의 - 각각 속성에는 해당하는 데이터 유형과 유효성 검사 규칙 정의
+const userSchema = z.object({
+  id: z.string(),
+  username: z.string().min(3).max(20),
+  email: z.string().email(),
+  age: z.number().int().positive(),
+  isAdmin: z.boolean(),
+})
+```
+
+**2. 유효성 검사하기**
+
+```jsx
+const userData = {
+  id: '123',
+  username: 'john_doe',
+  email: 'john@example.com',
+  age: 30,
+  isAdmin: false,
+}
+
+// 데이터 유효성 검사
+try {
+  const validatedUser = userSchema.parse(userData)
+  console.log('Valid user:', validatedUser)
+} catch (error) {
+  console.error('Validation error:', error.errors)
+}
+```
+
+**3. 스키마를 사용한 타입 추론**
+typescript에서 zod 스키마를 사용하여 typescript가 자동으로 타입 추론을 할 수 있다.  
+코드 작성 시 유형 안정성을 높이고 개발자 실수를 사전에 방지하는데 도움이 된다.
+
+```jsx
+// userData의 타입을 추론하여 userSchema와 일치하는지 확인
+type UserData = z.infer<typeof userSchema>;
+
+// 아래 코드는 TypeScript 컴파일러에서 에러를 발생시킬 것입니다.
+const invalidUserData: UserData = {
+    id: '123',
+    username: 'j',
+    email: 'invalid_email',
+    age: -5, // 음수는 허용되지 않음
+    isAdmin: 'false' // 잘못된 데이터 타입
+};
+```
+
+### React-Hook-Form과 zod를 사용한 validation 예제
+
+(아래 주석을 참고 하면서 코드를 봐주세요)
+
+```jsx
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 
-// zod(https://zod.dev/) - type별 유효성 검사 메소드가 여러가지 있습니다.
-
 // zod object 생성
 const schema = z.object({
-// refine을 사용하여도 표시 할 수도 있음
-// z.string().refine(data => data.length >= 3, {message : '이름은 최소 3글자~'})
-name: z.string().min(3, '이름은 최소 3글자 이상이어야 합니다.'),
-email: z.string().email('올바른 이메일 주소를 입력하세요.'),
+  // refine을 사용하여도 표시 할 수도 있음
+  // z.string().refine(data => data.length >= 3, {message : '이름은 최소 3글자~'})
+  name: z.string().min(3, '이름은 최소 3글자 이상이어야 합니다.'),
+  email: z.string().email('올바른 이메일 주소를 입력하세요.'),
 });
 
 // 폼 데이터 인터페이스
 interface FormData {
-name: string;
-email: string;
+  name: string;
+  email: string;
 }
 
 // ValidationSampleCode component
 const ValidationSampleCode = () => {
 
-const {
-register,
-handleSubmit,
-formState: { errors } // errors 객체를 사용하여 각 템플릿 필드의 오류메시지 표시 가능
-} = useForm<FormData>({
-// 위에 만든 zod object(schema)를 사용해 zodResolver() 메서드로 form 유효성 검사
-resolver: zodResolver(schema),
-});
+  const {
+    register,
+    handleSubmit,
+    formState: { errors } // errors 객체를 사용하여 각 템플릿 필드의 오류메시지 표시 가능
+  } = useForm<FormData>({
+    // 위에 만든 zod object(schema)를 사용해 zodResolver() 메서드로 form 유효성 검사
+    resolver: zodResolver(schema),
+  });
 
-// onSubmit 메서드를 사용하여 유효성검사 통과 시 데이터 처리를 콜백으로 선언가능
-const onSubmit: SubmitHandler<FormData> = (data) => {
-console.log(data);
-};
+  // SubmitHandler를 사용하여 유효성검사 통과 시 데이터 처리를 콜백으로 선언가능
+  const onSubmit = SubmitHandler<FormData> = (data) => {
+    // 통과 시 데이터 처리
+    console.log(data);
+  };
 
-return (
-
-<form onSubmit={handleSubmit(onSubmit)}>
-<div>
-<label>이름</label>
-<input {...register('name')} />
-{errors.name && <p>{errors.name.message}</p>}
-</div>
-
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <div>
+        <label>이름</label>
+        <input {...register('name')} />
+        {errors.name && <p>{errors.name.message}</p>}
+      </div>
       <div>
         <label>이메일</label>
         <input {...register('email')} />
@@ -100,11 +157,8 @@ return (
 
       <button type="submit">제출</button>
     </form>
-
-);
+  );
 };
 
-export default ValidationSampleCode
-
-이건 내용 이외에 React Test Code 작성에 대해 잘 정리된 블로그가 있어서 공유합니다.
-https://maeng2418.github.io/react/react_testing_library/
+export default ValidationSampleCode;
+```
