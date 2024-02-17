@@ -8,22 +8,25 @@ summary: redis와 kafka를 비교
 
 <TOCInline toc={props.toc} toHeading={4} />
 
-## redis, kafka - 게시/구독(Publish/Subscribe) 메시징
+## 게시/구독(Publish/Subscribe) 메시징
 
 현대의 클라우드 아키텍처에서는 애플리케이션을 더 작고 독립적인 블록으로 분리하는 추세(**SOA or MSA**)  
 이러한 분산 시스템에서는 실시간 이벤트 알림(**게시/구독(pub/sub) 메시징**)이 중요한 역할을 한다.  
 `메시징 시스템을 구축`하는 데 있어 `Kafka와 Redis는` 두 가지 주요 대안으로 떠올랐다.
 
+## redis
 
 `Redis`는 In-memory key-value 데이터 스토어로 이벤트 발생 시  
 게시자가 모든 구독자에게 메시지를 배포하는 `푸시 기반 시스템`을 지원합니다.
 
-[redis 내용 정리] (/blog/about-redis)
+[redis 내용 정리](/blog/about-redis)
+
+## apache kafka
 
 `Kafka`는 스트림 처리 엔진으로 게시자와 구독자가 공통 메시지 대기열을 공유하여  
 구독자가 필요에 따라 메시지를 가져오는 `풀 기반 시스템`을 지원합니다.
 
-[Kafka 내용 정리] (/blog/about-apache-kafka)
+[Kafka 내용 정리](/blog/about-apache-kafka)
 
 ## redis, kafka 차이
 
@@ -46,6 +49,8 @@ summary: redis와 kafka를 비교
 3. 지연시간
 4. 내결함성
 
+### 요약
 
+## 사용시기
 
-
+그렇다면 redis와 kafka는 언제 사용하면 될까?
