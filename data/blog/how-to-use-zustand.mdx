@@ -1,9 +1,67 @@
 ---
-title: 'Zustand 사용법'
-date: '20214-02-23'
-tags: ['state', 'Zustand', 'React']
+title: Zustand 사용법
+date: '2024-02-23'
+tags: ['zustand', '상태관리', 'react']
 draft: false
-summary: 'React 상태관리 라이브러리 Zustand를 알아보자'
+summary: 상태관리 라이브러리 zustand를 알아보자
 ---
 
 <TOCInline toc={props.toc} toHeading={4} />
+
+## Zustand
+
+- 작은패키지, 빠르며 확장 가능한 상태관리 솔루션
+- hooks 기반의 직관적인 API로 쉬운 사용성
+
+### 설치방법
+
+```node
+# NPM
+npm install zustand
+```
+
+### 생성
+
+```ts
+
+// 인터페이스 선언
+interface SortModel {
+	// 정렬 기준 필드
+	field: string
+	sort: 'ASC' | 'DESC' | undifined | null
+};
+
+// create 메소드로 상태생성
+const useSortStore = create<SortModel>(set => ({
+	field: '',
+	sort: null,
+	resetSort: () => set({field: '', sort: null})
+	updateSort: (newSortModel: SortModel) => set((state) => ({...newSortModel})
+}));
+
+export { SortModel, useSortStore };
+
+```
+### 사용
+
+```tsx
+import { SortModel, useSortStore } from '@/store/grid/sortModel'
+
+const DataGrid = () => {
+	
+	// 상태 업데이트
+	const handleSort = (sortModel: SortModel) => {
+		updateSort(sortModel)
+	}
+
+	<DataGrid
+		// 생략
+		updateSort={handleSort} // 정렬 변경 시 상태 업데이트
+	/>
+}
+```
+
+
+
+
+
