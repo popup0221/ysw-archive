@@ -3,63 +3,61 @@ title: '깊은복사, 얕은복사'
 date: '2024-02-24'
 tags: ['javascript']
 draft: false
-summary: '자바 스크립트에서의 깊은복사, 얕은복사를 알아보자'
+summary: 자바 스크립트에서의 깊은복사, 얕은복사를 알아보자
 ---
 
 <TOCInline toc={props.toc} toHeading={4} />
-
 
 ## 사전지식
 
 - 메모리 - 스택(Stack), 힙(Heap)
 
-	- 스택(Stack)의 특징
-		- 원시타입 값과 변수에 대한 메타데이터가 저장
-		- 함수 호출 시 생성되는 지역 변수, 매개변수, 함수 호출 정보 등이 저장
-		- 스택은 후입선출(LIFO, Last-In-First-Out)방식으로 데이터를 관리
-	
-	- 힙(Heap)의 특징
-		- 참조 타입의 변수(비교적 복잡한 데이터 구조)가 저장
-		- 메타데이터는 힙에 저장되며, 스택에는 해당 메타데이터에 대한 참조가 저장
-		- 힙 메모리는 동적으로 할당되고 헤제되는 데이터가 저장되는 공간으로, 메모리의 자유 영역을 차지
+  - 스택(Stack)의 특징
+    - 원시타입 값과 변수에 대한 메타데이터가 저장
+    - 함수 호출 시 생성되는 지역 변수, 매개변수, 함수 호출 정보 등이 저장
+    - 스택은 후입선출(LIFO, Last-In-First-Out)방식으로 데이터를 관리
+  - 힙(Heap)의 특징
+    - 참조 타입의 변수(비교적 복잡한 데이터 구조)가 저장
+    - 메타데이터는 힙에 저장되며, 스택에는 해당 메타데이터에 대한 참조가 저장
+    - 힙 메모리는 동적으로 할당되고 헤제되는 데이터가 저장되는 공간으로, 메모리의 자유 영역을 차지
 
 - 자바스크립트의 변수에는 두 가지 타입이 있다.
 
-	- 원시타입(Primitive Types): 원시타입 변수는 선언 시 변수와 값(메타 데이터) 모두 스택영역에 저장된다.
-	
-	예를 들어 `let num = 42;` Number(원시타입) 변수 선언 시,  
-	let으로 선언되어 재할당 가능한 num이라는 변수와 42라는 메타데이터는 `스택영역에 직접 할당`됩니다.
+  - 원시타입(Primitive Types): 원시타입 변수는 선언 시 변수와 값(메타 데이터) 모두 스택영역에 저장된다.
 
-	```javascript
-	let num = 42 // 숫자 Number
-	let str = 'Hello' // 문자열 String
-	let isTrue = true // Boolean
-	let sym = Symbol('unique') // Symbol(심볼): 유일한 값으로 사용되는 데이터 타입, 주로 객체의 프로퍼티 키로 사용
-	let dummy = null // null: 값이 존재하지 않음
-	let dummy2 // undifined: 값이 할당 되지않음
-	```
+  예를 들어 `let num = 42;` Number(원시타입) 변수 선언 시,  
+  let으로 선언되어 재할당 가능한 num이라는 변수와 42라는 메타데이터는 `스택영역에 직접 할당`됩니다.
 
-	- 참조타입(Reference Types) - 참조타입 변수는 선언 시 값(메타데이터) 힙 영역에 변수와 참조주소가 스택에 저장된다
+  ```javascript
+  let num = 42 // 숫자 Number
+  let str = 'Hello' // 문자열 String
+  let isTrue = true // Boolean
+  let sym = Symbol('unique') // Symbol(심볼): 유일한 값으로 사용되는 데이터 타입, 주로 객체의 프로퍼티 키로 사용
+  let dummy = null // null: 값이 존재하지 않음
+  let dummy2 // undifined: 값이 할당 되지않음
+  ```
 
-	예를 들어 `const fruit = ['apple', 'banana']` 라는 배열 (참조타입) 변수 선언 시,
-	const로 선언되어 불변의 값 ['apple', 'banana'] 는 동적으로 힙 영역에 할당되고  
-	그 값에 대한 참조 주소가 스택 영역에 할당된다.
+  - 참조타입(Reference Types) - 참조타입 변수는 선언 시 값(메타데이터) 힙 영역에 변수와 참조주소가 스택에 저장된다
 
-	```javascript
-	let obj = {key: 'value'} // 객체(Object)
-	let arr = [1, 2, 3] // 배열(Array)
-	function add(a, b) {
-	return a + b
-	} // 함수(Function)
-	let currentDate = new Date() // 날짜(Date)
-	let regex = /pattern/ // 정규표현식(RegExp)
-	```
+  예를 들어 `const fruit = ['apple', 'banana']` 라는 배열 (참조타입) 변수 선언 시,
+  const로 선언되어 불변의 값 ['apple', 'banana'] 는 동적으로 힙 영역에 할당되고  
+  그 값에 대한 참조 주소가 스택 영역에 할당된다.
+
+  ```javascript
+  let obj = { key: 'value' } // 객체(Object)
+  let arr = [1, 2, 3] // 배열(Array)
+  function add(a, b) {
+    return a + b
+  } // 함수(Function)
+  let currentDate = new Date() // 날짜(Date)
+  let regex = /pattern/ // 정규표현식(RegExp)
+  ```
 
 ## 변수 복사
 
 - 원시타입의 변수 복사
-원시타입은 스택 상에 값 자체가 저장되어 변수 간 복사 시에 값이 복사가 되어  
-하나의 변수를 변경해도 다른 변수에는 영향을 주지 않는다. 즉 `깊은 복사`가 된다.
+  원시타입은 스택 상에 값 자체가 저장되어 변수 간 복사 시에 값이 복사가 되어  
+  하나의 변수를 변경해도 다른 변수에는 영향을 주지 않는다. 즉 `깊은 복사`가 된다.
 
 - 참조타입의 변수 복사
-참조타입은 
+  참조타입은
