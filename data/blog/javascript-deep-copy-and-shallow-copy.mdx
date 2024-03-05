@@ -1,0 +1,23 @@
+---
+title: '깊은복사, 얕은복사'
+date: '2024-02-24'
+tags: ['javascript']
+draft: false
+summary: 자바 스크립트에서의 깊은복사, 얕은복사를 알아보자
+---
+
+<TOCInline toc={props.toc} toHeading={4} />
+
+## 사전지식
+
+- [자바 스크립트의 메모리](/blog/javascript-memory)
+- [자바 스크립트의 변수](/blog/javascript-variable)
+
+## 변수 복사
+
+- 원시타입의 변수 복사:
+
+  원시타입은 스택 상에 값 자체가 저장되어 변수 간 복사 시에 값이 복사가 되어  
+  하나의 변수를 변경해도 다른 변수에는 영향을 주지 않는다. 즉 `깊은 복사`가 된다.
+
+- 참조타입의 변수 복사:
