@@ -1,0 +1,17 @@
+---
+title: 'Spring 요청, 응답 시 로깅'
+date: '2024-07-10'
+tags: ['spring']
+draft: false
+summary: 스프링의 요청/응답 시 body를 logging 하는 방법
+---
+
+<TOCInline toc={props.toc} toHeading={4} />
+
+# 계기
+사내 인증서버 api를 관리 중 에러로 인해 dispatcher sevlet에 도달하지 못하고 request의 body에 대해서 로깅이 필요했다.  
+
+
+# 조사
+
+보통 이러한 경우
