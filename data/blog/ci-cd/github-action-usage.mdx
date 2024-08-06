@@ -1,0 +1,69 @@
+---
+title: 깃허브 액션을 사용하여 AWS에 WAS 배포하기
+date: '2024-08-06'
+tags: ['cd/cd']
+draft: false
+summary: 깃허브 액션 사용법을 알아보자
+---
+
+## 1. GitHub Actions 설정 파일 만들기
+
+GitHub Actions 워크플로우는 저장소의 .github/workflows 디렉토리에 YAML 파일로 정의됩니다.  
+예를 들어, ci.yml 파일을 만들 수 있습니다.
+
+## 2. 기본 워크플로우 작성
+
+ci 파일 위치, 트리거, 실행할 job을 정의해준다.
+
+```yaml
+# .github/workflows/ci.yml
+name: CI
+
+# 워크플로우가 트리거되는 조건을 정의
+on:
+  push:
+    branches: ['main']
+  pull_request:
+    branches: ['main']
+
+# 워크플로우에서 실행할 job 정의
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests
+        run: npm test
+```
+
+## 3. 워크플로우 파일의 주요 요소
+
+name: 워크플로우의 이름을 지정합니다.
+on: 워크플로우를 트리거하는 이벤트를 정의합니다. 위의 예에서는 main 브랜치로의 푸시 또는 풀 리퀘스트가 생성될 때 워크플로우가 실행됩니다.
+jobs: 워크플로우에서 실행할 작업(Job)을 정의합니다. 각 작업은 여러 개의 steps로 구성됩니다.
+	runs-on: 워크플로우가 실행될 환경을 지정합니다. (ubuntu-latest, windows-latest, macos-latest 등)
+	steps: 각 작업에서 수행할 명령어 또는 액션을 정의합니다.
+		uses: Git
+		Hub에서 제공하는 액션을 사용합니다. 예: actions/checkout은 리포지토리의 코드를 체크아웃하는 액션입니다.
+		run: 쉘 명령어를 실행합니다.
+
+## 4. 저장소에 파일 커밋
+
+설정 파일을 .github/workflows/ 디렉토리에 추가하고 저장소에 커밋하면  
+GitHub Actions가 자동으로 이를 인식하고 지정된 조건에 따라 워크플로우를 실행합니다.
+
+5. 결과 확인
+
+GitHub 리포지토리의 Actions 탭에서 워크플로우의 실행 상태와 로그를 확인할 수 있습니다.  
+성공 여부, 실행 시간, 각 스텝의 로그 등을 볼 수 있어 문제를 디버깅하거나 최적화하는 데 유용합니다.
