@@ -3,7 +3,7 @@ const siteMetadata = {
   title: 'YSW Archive',
   author: 'YoonSeongWook',
   headerTitle: 'YSW Archive',
-  description: 'A blog created with Next.js and Tailwind.css',
+  description: '특별해지고 싶은 개발자 윤성욱입니다.',
   language: 'ko-KR',
   theme: 'system', // system, dark or light
   siteUrl: 'https://tailwind-nextjs-starter-blog.vercel.app',
@@ -14,10 +14,6 @@ const siteMetadata = {
   email: 'popup0221@naver.com',
   github: 'https://github.com/popup0221',
   instagram: 'https://www.instagram.com/vvookk22',
-  // twitter: 'https://twitter.com/Twitter',
-  // facebook: 'https://instagram.com',
-  // youtube: 'https://youtube.com',
-  // linkedin: 'https://www.linkedin.com',
   locale: 'ko-KR',
   analytics: {
     // If you want to use an analytics provider you have to add it to the
